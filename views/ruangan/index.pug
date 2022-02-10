@@ -1,0 +1,38 @@
+extends ../templates/layout
+
+block pages-header
+	h1 Ruangan
+		small
+block pages
+	.row
+		.col-md-12.col-sm-12
+			.box.box-solid.box-primary
+				.box-header
+					h3.box-title
+				// box-header
+				.box-body
+					table.table.table-bordered.table-striped
+						thead
+							tr
+								th #
+								th Nama Ruangan
+								th Keterangan
+								th Aksi
+						tbody
+							each val, idx in row
+								tr
+									td #{idx+1}
+									td #{val.nama}
+									td #{val.keterangan}
+									td
+										.btn-toolbar
+											//a.text-warning(href='#')
+												//i.fa.fa-fw.fa-edit
+											a.text-danger(onclick='return confirm(`yakin hapus ruangan`)', href='/ruangan/hapus/'+val.rowid)
+												i.fa.fa-fw.fa-trash
+											a.text-warning(href='/ruangan/edit/'+val.rowid)
+												i.fa.fa-fw.fa-edit
+				.box-footer
+					a.btn.btn-primary(href='/ruangan/tambah')
+						i.fa.fa-fw.fa-plus
+						| Tambah Ruangan

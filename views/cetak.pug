@@ -1,0 +1,88 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', name='viewport')
+		title #{'Aplikasi Antrian ' +config.nama}
+		link(rel='shortcut icon', href='/assets/origin/favicon.png')
+		link(rel='stylesheet', href='/assets/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/assets/css/font-awesome.min.css')
+		link(rel='stylesheet', href='/assets/css/login.css')
+	body.full-bg.mid-screen
+		.container
+			.row
+				each val, idk in loket
+					.col-sm-6
+						.panel.panel-primary
+							.panel-heading
+								.panel-title.text-center Loket #{val.kode}
+							.panel-body
+								a.btn.btn-block.text-center(id='antrian', href='#', style='font-size: 15pt;  line-height: 15pt;', onclick=`cetak(${val.kode}, '${val.nama}')`)
+									= val.nama
+		div(style='position: absolute; top: 5px; height: 50px; width:100%')
+			marquee(class='bg-danger', style='padding: 10px; font-size: 14pt;  line-height: 14pt;')
+				| Selamat Datang di layanan Antrian Pemerintah Kabupaten Aceh Barat Daya, silahkan tekan nomor antrian untuk mencetak!
+			.toolbar.pull-right.text-right(style='width: 50px; padding: 4px;')
+				button.btn.btn-sm.btn-danger.btn-tutup(type='button', onclick='window.close()')
+					strong &times;
+				.clearfix &nbsp;
+			img.center-block(src='/assets/origin/logo.png', alt='Logo', title='Dukcapil', style='width: 100px; margin: 20px;')
+		script(src='/assets/js/jquery.min.js')
+		script(src='/socket.io/socket.io.js')
+		script(src='/assets/js/script.js')
+		script.
+			$(function(){
+				$('.toolbar .btn-tutup').hide();
+				$('.toolbar').on('mouseover',(function(){
+					$('.btn-tutup').show();
+				}))
+				$('.toolbar').on('mouseout',(function(){
+					$('.btn-tutup').hide();
+				}))
+			});
+			var socket = io();
+			var cetak_btn = document.getElementById('antrian');
+			var nomor = !{parseInt(no_antrian)+1}
+			var disabled_cetak = false;
+			var cetak_btn = document.getElementById('antrian');
+			//- cetak_btn.innerHTML = nomor;
+			socket.on('reload cetak', (data) => {
+				//- cetak_btn.innerHTML = data;
+				nomor = data;
+				disabled_cetak = false;
+			});
+
+			function closePrint () {
+				document.body.removeChild(this.__container__);
+			}
+
+			function setPrint () {
+				this.contentWindow.__container__ = this;
+				this.contentWindow.onbeforeunload = closePrint;
+				this.contentWindow.onafterprint = closePrint;
+				this.contentWindow.focus(); // Required for IE
+				this.contentWindow.print();
+			}
+
+			function cetak (loket, nama) {
+				if (disabled_cetak) return
+				var oHiddFrame = document.createElement("iframe");
+				fetch('/antrian/tambah/'+nomor+'/'+loket)
+				.then((response) => {
+					disabled_cetak = true;
+					return response.json();
+				})
+				.then((data) => {
+					socket.emit('reload cetak', data.nomor);
+					oHiddFrame.onload = setPrint;
+					oHiddFrame.style.position = "fixed";
+					oHiddFrame.style.right = "0";
+					oHiddFrame.style.bottom = "0";
+					oHiddFrame.style.width = "0";
+					oHiddFrame.style.height = "0";
+					oHiddFrame.style.border = "0";
+					oHiddFrame.src = '/cetak_antrian/'+nomor+'/'+nama;
+					document.body.appendChild(oHiddFrame);
+				});
+			}

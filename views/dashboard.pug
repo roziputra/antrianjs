@@ -1,0 +1,54 @@
+extends templates/layout
+
+append header-script
+	script(src='/socket.io/socket.io.js')
+	script.
+		$(function(){
+			
+			var socket = io();
+			var total = $('.total').find('.info-box-number');
+			var sudah = $('.sudah').find('.info-box-number');
+			var belum = $('.belum').find('.info-box-number');
+			socket.on('connect', function(){
+				socket.on('reload dashboard', (data) => {
+					total.html(data.antrian);
+					sudah.html(data.sudah);
+					belum.html(data.belum);
+				});
+			});
+		});
+block pages
+	.content-wrapper
+		section.content-header
+			h1 Dashboard
+				small halaman utama
+		section.content
+			if well != ''
+				.alert.alert-info.alert-dismissible
+					button.close(type='button', data-dismiss='alert', aria-hidden='true') &times;
+					i.icon.fa.fa-info
+					= ' Hai '+ user.nama +','
+					p
+						= well
+			.row
+				.col-md-4.col-sm-6.col-xs-12
+					.total.info-box
+						span.info-box-icon.bg-yellow
+							i.fa.fa-fw.fa-users
+						.info-box-content
+							span.info-box-text Total Pengunjung
+							span.info-box-number #{antrian}
+				.col-md-4.col-sm-6.col-xs-12
+					.sudah.info-box
+						span.info-box-icon.bg-green
+							i.fa.fa-fw.fa-check-square-o
+						.info-box-content
+							span.info-box-text Sudah dilayani
+							span.info-box-number #{sudah}
+				.col-md-4.col-sm-6.col-xs-12
+					.belum.info-box
+						span.info-box-icon.bg-red
+							i.fa.fa-fw.fa-list-ul
+						.info-box-content
+							span.info-box-text Sedang Menunggu
+							span.info-box-number #{belum}

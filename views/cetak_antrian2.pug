@@ -1,0 +1,31 @@
+doctype html
+html
+	head
+		link(rel='stylesheet', href='/assets/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/assets/css/font-awesome.min.css')
+		link(rel='stylesheet', href='/assets/css/print.css')
+		style.
+			body {
+				padding-top: 20px;
+				padding-bottom: 20px;
+			}
+			.panel-heading {
+				font-size: 12px
+			}
+			.panel-body .nomor {
+				font-size: 50px;
+			}
+			.moto {
+				font-size: 10px;
+			}
+	body
+		.container
+			.row
+				.col-sm-4.col-sm-offset-4
+					.panel.panel-primary
+						.panel-heading.text-center Dukcapil Tebingtinggi
+						.panel-body.text-center
+							img.center-block(src='/assets/img/logo.png', alt='Logo', title='Dukcapil', style='width: 60px;')
+							h3.nomor #{no_antrian}
+							p NOMOR ANTRIAN
+						.panel-footer.text-center.moto #setiamelayanitebingtinggi

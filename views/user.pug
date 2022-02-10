@@ -1,0 +1,42 @@
+extends templates/layout
+
+block pages
+	div.content-wrapper
+		section.content-header
+			h1 User
+				small
+		section.content
+			.row
+				.col-md-12.col-sm-12
+					.box.box-solid.box-primary
+						.box-header
+							h3.box-title Daftar Operator
+						// box-header
+						.box-body
+							if message !== ''
+								.alert(class='alert-success alert-dismissible')
+									button.close(type='button', data-dismiss='alert', aria-hidden='true') &times;
+									p
+										i.icon.fa.fa-check
+										= message
+							table.table.table-bordered.table-striped
+								thead
+									tr
+										th USERNAME
+										th NAMA
+										th Aksi
+								tbody
+									each val, idk in row
+										tr
+											td #{val.username}
+											td #{val.nama}
+											td
+												.btn-toolbar
+													//a.text-warning(href='#')
+														//i.fa.fa-fw.fa-edit
+													a.text-danger(href='/user/hapus/'+val.username)
+														i.fa.fa-fw.fa-trash
+						.box-footer
+							a.btn.btn-primary(href='/user/tambah')
+								i.fa.fa-fw.fa-user-plus
+								= ' Tambah Operator'

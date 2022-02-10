@@ -1,0 +1,44 @@
+extends ../templates/layout
+
+block pages
+	div.content-wrapper
+		section.content-header
+			h1 Loket
+				small
+		section.content
+			.row
+				.col-md-12.col-sm-12
+					.box.box-solid.box-primary
+						.box-header
+							h3.box-title Edit Loket
+						// box-header
+						.box-body
+							form.form-horizontal(action='/loket/edit/', method='POST')
+								.form-group
+									label.col-sm-3.control-label(for='input_kode') Kode Loket
+									.col-sm-9
+										input#input_kode.form-control(type='text', name='kode' value=loket.kode placeholder='Kode Loket' readonly)
+								.form-group
+									label.col-sm-3.control-label(for='input_nama') Nama Loket
+									.col-sm-9
+										input#input_nama.form-control(type='text' name='nama' value=loket.nama placeholder='Nama Loket' required)
+								.form-group
+									label.col-sm-3.control-label(for='input_user') Operator
+									.col-sm-9
+										select#input_user.form-control(name='user' required)
+											option(value='') Pilih Operator
+											each val, idk in user_loket
+												if loket.user==val.username
+													option(value=val.username, selected='selected') #{val.nama}
+												else
+													option(value=val.username) #{val.nama}
+								.form-group
+									.col-sm-offset-3.col-sm-9
+										.btn-toolbar
+											button.btn.btn-md.btn-success(type='submit')
+												i.fa.fa-fw.fa-save
+												= ' Simpan'
+											a.btn.btn-danger(href='/loket')
+												i.fa.fa-fw.fa-undo
+												= ' Batal'
+						// /.box-body

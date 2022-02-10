@@ -1,0 +1,88 @@
+extends ../templates/layout
+
+append header-script
+	script(src='/socket.io/socket.io.js')
+	script.
+		$(function(){
+			
+			var socket = io();
+			var btnlanjut = $('.btn-lanjut');
+			var btnpanggil = $('.btn-panggil');
+
+			$('.btn-panggil').on('click', () => {
+				var antrian = !{loket.antrian}
+				var loket = !{loket.kode}
+				btnlanjut.attr('disabled',true);
+				btnpanggil.addClass('disabled').attr('disabled',true);
+				socket.emit('panggil', {antrian: antrian.toString(), loket: loket.toString()});
+			})
+			socket.on('connect', function(){
+				socket.on('panggil', (data) => {
+					btnlanjut.attr('disabled',true);
+					btnpanggil.addClass('disabled').attr('disabled',true);
+				});	
+				socket.on('lanjut', () => {
+					$('.alert').alert('close');
+					btnlanjut.attr('disabled',false);
+					btnpanggil.removeClass('disabled').attr('disabled',false);
+				});	
+			})
+			
+		});
+block pages
+	div.content-wrapper
+		section.content-header
+			h1 Loket
+				small
+		section.content
+			.row
+				.col-md-6.col-sm-12
+					.box.box-solid.box-danger
+						.box-header
+							h3.box-title Antrian
+						.box-body
+							if message !== ''
+								.alert.alert-success.alert-dismissible.fade.in
+									button.close(type='button', data-dismiss='alert', aria-hidden='true') &times;
+									p
+										i.icon.fa.fa-check
+										= message
+							.col-sm-6.col-sm-offset-3
+								.panel.panel-primary
+									.antrian.panel-body.text-center.text(style='font-size: 80px;') #{loket.antrian}
+						.box-footer
+							a.btn-lanjut.btn.btn-warning.btn-konfirm(title='apakah anda yakin lanjutkan?', href='/antrian/lanjut/'+loket.kode)
+								i.fa.fa-fw.fa-play
+								| Lanjutkan
+							if loket.antrian > 0
+								button.btn-panggil.btn.btn-info.pull-right(type='button')
+									i.fa.fa-fw.fa-bullhorn
+									| Panggil Lagi
+				.col-md-6.col-sm-12
+					.box.box-primary
+						.box-header
+							h3.box-title Data Loket
+						// box-header
+						.box-body
+							table.table.table-hover.table.condensed.table-striped.table-sm
+								tbody
+									tr
+										td Nama Operator
+										td #{loket.operator}
+									tr
+										td kode Loket
+										td #{loket.kode}
+									tr
+										td Nama Loket
+										td #{loket.nama}
+			#myModal.modal.fade(tabindex=-1, role='dialog', aria-labelledby='myModalLabel')
+				.modal-dialog(role='document')
+					.modal-content
+						.modal-header
+							button.close(type='button', data-dismiss='modal', aria-label='close')
+								span(aria-hidden='true') &times;
+							h4#myModalLabel.modal-title Konfirmasi
+						.modal-body
+						.modal-footer
+							button.btn.btn-default(type='button', data-dismiss='modal') Tidak
+							button.btn.btn-danger.btn-ok(type='button', data-dismiss='modal') Yakin

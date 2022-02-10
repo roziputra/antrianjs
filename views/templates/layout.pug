@@ -1,0 +1,111 @@
+mixin menu_li_aktif(linkref)
+	if pages == linkref
+		li.active
+			block
+	else
+		li
+			block
+
+mixin menu_li_treeview(linkref_arr)
+	- var ketemu = linkref_arr.indexOf(pages)
+	if ketemu > -1
+		li.treeview.active
+			block
+	else
+		li.treeview
+			block
+
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', name='viewport')
+		title #{'Aplikasi Antrian '+ config.nama}
+		block header-style
+			link(rel='shortcut icon', href='/assets/origin/favicon.png')
+			link(rel='stylesheet', href='/assets/css/bootstrap.min.css')
+			link(rel='stylesheet', href='/assets/css/font-awesome.min.css')
+			link(rel='stylesheet', href='/assets/css/AdminLTE.min.css')
+			link(rel='stylesheet', href='/assets/css/skins/_all-skins.min.css')
+			link(rel='stylesheet', href='/assets/css/style.css')
+		block header-script
+			script(src='/assets/js/jquery.min.js')
+			script(src='/assets/js/bootstrap.min.js')
+			script(src='/assets/js/adminlte.min.js')
+			script(src='/assets/js/bootstrap-datepicker.js')
+			script(src='/assets/js/select2.min.js')
+			script(src='/assets/js/script.js')
+
+	body.hold-transition.skin-blue-light.fixed
+		div.wrapper
+			block menu-atas
+				header.main-header
+					a(class='logo', href='/dashboard')
+						strong SISTEM ANTRIAN
+					nav.navbar.navbar-static-top
+						a(class='sidebar-toggle', data-toggle='push-menu', role='button', href='#')
+							span.sr-only Toggle navigation
+			block menu-samping
+				aside.main-sidebar
+					section.sidebar
+						div.user-panel
+							div.pull-left.image
+								img(src='/assets/img/user.png', class='user-image', alt='User Image', title='User Image')
+							div.pull-left.info
+								p= user.nama
+								a(href='#')
+									i.fa.fa-circle.text-lime
+									= user.tipe
+						ul.sidebar-menu(data-widget='tree')
+							li.header.text-blue main navigation
+							+menu_li_aktif('dashboard')
+								a(href='/dashboard')
+									i.fa.fa-fw.fa-home
+									span Dashboard
+							if user.tipe == 'admin'
+								+menu_li_aktif('loket')
+									a(href='/loket')
+										i.fa.fa-fw.fa-flag
+										span Daftar Loket
+								+menu_li_aktif('user')
+									a(href='/user')
+										i.fa.fa-fw.fa-user
+										span Daftar Operator
+							if user.tipe == 'operator'
+								+menu_li_aktif('loket/antrian')
+									a(href='/loket/antrian')
+										i.fa.fa-fw.fa-ticket
+										span Loket
+							li
+								a(href='/screen', target='_blank')
+									i.fa.fa-fw.fa-tv
+									span Tampilan TV
+							li
+								a(href='/cetak', target='_blank')
+									i.fa.fa-fw.fa-print
+									span Cetak Nomor
+							li
+								a(href='/speaker', target='_blank')
+									i.fa.fa-fw.fa-volume-up
+									span Speaker
+							li
+								a(href='/user/logout',)
+									i.fa.fa-fw.fa-power-off.text-danger
+									span.text-danger Logout
+			block pages
+				.content-wrapper
+					section.content-header
+						h1 Dashboard
+							small halaman utama
+					section.content
+						.alert.alert-warning.alert-dismissible
+							button.close(type='button', data-dismiss='alert', aria-hidden='true') x
+							i.icon.fa.fa-info
+							= 'Selamat Datang {user.nama}'
+						.row
+							.col-md-12.col-sm-12 ini isinya
+			block footer
+				footer.main-footer
+					.container
+						strong !{config.copyright}

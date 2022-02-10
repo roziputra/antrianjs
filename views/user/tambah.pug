@@ -1,0 +1,44 @@
+extends ../templates/layout
+
+block pages
+	div.content-wrapper
+		section.content-header
+			h1 User
+				small
+		section.content
+			.row
+				.col-md-12.col-sm-12
+					.box.box-solid.box-primary
+						.box-header
+							h3.box-title Tambah Pengguna
+						// box-header
+						.box-body
+							if message !== ''
+								.alert(class='alert-danger alert-dismissible')
+									button.close(type='button', data-dismiss='alert', aria-hidden='true') &times;
+									p
+										i.icon.fa.fa-ban
+										= message
+							form.form-horizontal(action='/user/tambah', method='POST')
+								.form-group
+									label.col-sm-3.control-label(for='input_nama') Nama Operator
+									.col-sm-9
+										input#input_nama.form-control(type='text', name='nama', value='', placeholder='Nama Operator' required)
+								.form-group
+									label.col-sm-3.control-label(for='input_username') Username
+									.col-sm-9
+										input#input_username.form-control(type='text', name='username', value='', placeholder='Username', required)
+								.form-group
+									label.col-sm-3.control-label(for='input_password') Password
+									.col-sm-9
+										input#input_password.form-control(type='text', name='password', value='', placeholder='Password' required)
+								.form-group
+									.col-sm-offset-3.col-sm-9
+										.btn-toolbar
+											button.btn.btn-md.btn-success(type='submit')
+												i.fa.fa-fw.fa-save
+												= ' Simpan'
+											a.btn.btn-danger(href='/user')
+												i.fa.fa-fw.fa-undo
+												= ' Batal'
+						// /.box-body

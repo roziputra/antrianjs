@@ -1,0 +1,116 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', name='viewport')
+		title #{'Aplikasi Antrian '+ config.nama}
+		link(rel='shortcut icon', href='/assets/origin/favicon.png')
+		link(rel='stylesheet', href='/assets/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/assets/css/font-awesome.min.css')
+		link(rel='stylesheet', href='/assets/css/login.css')
+	body.full-bg.mid-screen
+		.container
+			.row
+				.col-sm-4.col-sm-offset-4
+					img.center-block(src='/assets/origin/logo.png', alt='Logo', title='Dukcapil', style='width: 120px;')
+		div(style='position: absolute; top: 5px; height: 50px; width:100%')
+			marquee(class='bg-danger', style='padding: 10px; font-size: 14pt;  line-height: 14pt;')
+				| Selamat Datang di layanan Antrian Dinas Dukcapil Kabupaten Aceh Barat Daya,
+		#myModal.modal.fade(tabindex=-1, role='dialog', aria-labelledby='myModalLabel')
+			.modal-dialog(role='document')
+				.modal-content
+					.modal-header
+						button.close(type='button', data-dismiss='modal', aria-label='close')
+							span(aria-hidden='true') &times;
+						h4#myModalLabel.modal-title Halaman Untuk Speaker
+					.modal-body
+						| Halaman ini digunakan sebagai sumber suara antrian. silahkan sambungkan komputer ini dengan speaker untuk mengeluarkan suara panggilan. mohon jangan menutup halaman ini
+
+					.modal-footer
+						button.btn.btn-danger.btn-ok(type='button', data-dismiss='modal') OK
+		script(src='/assets/js/jquery.min.js')
+		script(src='/assets/js/bootstrap.min.js')
+		script(src='/socket.io/socket.io.js')
+		script(src='/assets/js/howler.min.js')
+		script(src='/assets/js/script.js')
+		script.
+			$(function(){
+				$("#myModal").modal('show');
+			});
+			var socket = io();
+
+			var bell = new Howl({
+				src: '/assets/s/airport.mp3',
+				sprite: {
+					mulai: [0, 3400],
+					akhir: [3400, 7000]
+				},
+				loop: false
+			});
+			var suara_nomor_antrian = new Howl({
+				src: 'assets/s/nomor_antrian.mp3',
+				loop: false,
+			});
+			var suara_diloket = new Howl({
+				src: 'assets/s/diloket.mp3',
+				loop: false,
+			});
+			socket.on('connect', function(){
+				socket.emit('lanjut');
+				socket.on('panggil', (data) => {
+					var str_angka = data.antrian.terbilang().trim().split(' ');
+					var str_loket = data.loket.terbilang().trim().split(' ');
+					var bunyi_angka = [];
+					var bunyi_loket = [];
+
+					for (var i=0; i<str_angka.length; i++) {
+						bunyi_angka[i] = new Howl({
+						  	src: 'assets/s/'+str_angka[i]+'.mp3',
+						  	loop: false,
+						});
+					}
+
+					for (var j=0; j<str_loket.length; j++) {
+						bunyi_loket[j] = new Howl({
+						  	src: 'assets/s/'+str_loket[j]+'.mp3',
+						  	loop: false,
+						});
+					}
+
+					bell.play('mulai');
+					bell.once('end', function(){
+						suara_nomor_antrian.play();
+
+					});
+					suara_nomor_antrian.once('end', function(){
+						var total_waktu = 0;
+						for (var i=0;i<str_angka.length;i++) {
+							(function(i) {
+								setTimeout(function(){
+									bunyi_angka[i].play();
+								},total_waktu);
+								total_waktu += bunyi_angka[i].duration()*1000;
+							}(i));
+						}
+					});
+					bunyi_angka[i-1].once('end', function(){
+						suara_diloket.play();
+					},0);
+					suara_diloket.once('end', function(){
+						var total_waktu = 0;
+						for (var j=0;j<str_loket.length;j++) {
+							(function(j) {
+								setTimeout(function(){
+									bunyi_loket[j].play();
+								},total_waktu);
+								total_waktu += bunyi_loket[j].duration()*1000;
+							}(j));
+						}
+					});
+					bunyi_loket[j-1].once('end', function(){
+						bell.play('akhir');
+						socket.emit('lanjut');
+					});
+				});
+			})

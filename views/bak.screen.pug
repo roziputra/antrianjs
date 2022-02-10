@@ -1,0 +1,178 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', name='viewport')
+		title Aplikasi Antrian Tebing Tinggi
+		link(rel='shortcut icon', href='/assets/img/favicon.png')
+		link(rel='stylesheet', href='/assets/css/AdminLTE.min.css')
+		link(rel='stylesheet', href='/assets/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/assets/css/font-awesome.min.css')
+		link(rel='stylesheet', href='/assets/css/login.css')
+		style.
+			.txt .kota {
+				font-size: 46px;
+				line-height: 46px;
+			}
+			.txt .dinas {
+				font-size: 35px;
+				line-height: 35px;
+			}
+			@media (min-width: 1200px) {
+				.logo img {
+					height: 115px;
+					margin-left: 20px;
+				}
+				.jam {
+					font-size: 36px;
+					line-height: 36px;
+					margin-right:20px;
+					margin-top:30px;
+				}
+				.hari {
+					font-size: 24px;
+					line-height: 24px;
+					margin-right:20px;
+				}
+				.utama {
+					font-size: 48px;
+					padding: 10px;
+				}
+				.cabang {
+					font-size: 40px;
+					padding: 30px 20px;
+				}
+				.nama-loket {
+					margin-top: 60px;
+				}
+				.kaki marquee {
+					padding: 10px 0;
+					font-size: 30px;
+					line-height: 30px;
+				}
+			}
+			@media (min-width: 1900px) {
+				.logo img {
+					height: 115px;
+					margin-left: 100px;
+				}
+				.jam {
+					font-size: 36px;
+					line-height: 36px;
+					margin-right:100px;
+					margin-top:30px;
+				}
+				.hari {
+					font-size: 24px;
+					line-height: 24px;
+					margin-right:100px;
+				}
+				.utama {
+					font-size: 120px;
+					padding: 20px;
+				}
+				.cabang {
+					font-size: 100px;
+					padding: 60px 20px;
+				}
+				.nama-loket {
+					margin-top: 120px;
+				}
+				.kaki marquee {
+					padding: 20px 0;
+					font-size: 34px;
+					line-height: 34px;
+				}
+			}
+
+	body.bg-aqua(style='padding-top:160px; padding-bottom: 0px;')
+		.judul.bg-green(style='position: absolute; top: 0px; width:100%; padding: 20px 0;')
+			.container-fluid(style='height: 100%;')
+				.row(style='height: 100%')
+					.logo.col-lg-2
+						img(class='dukcapil', src='/assets/img/logo.png', alt='Logo', title='Dukcapil')
+					.txt.col-lg-8
+						.kota.text-center PEMERINTAH KOTA TEBINGTINGGI
+						.dinas.text-center.text-bold(style='font-size: 35px;  line-height: 35px;') DINAS KEPENDUDUKAN DAN CATATAN SIPIL
+						p.jalan.text-center(style='font-size: 24px;  line-height: 24px;') Jalan Gunung Bromo No.5 Rambutan Kota Tebing Tinggi - Sumatera Utara
+					.waktu.col-lg-2.text-right
+						.jam.text-bold
+						.hari.text-bold
+		.isi(style='height: 90%; padding: 20px 100px;')
+			.container-fluid(style='height: 100%;')
+				.row(style='height: 100%')
+					.col-lg-6(style='height: 100%; padding-bottom: 20px;')
+						.box.box-solid.box-danger(style='height: 100%;')
+							.box-header.text-center
+								.box-title
+									h1.text-bold ANTRIAN
+							.utama.box-body.text-center
+								.nama-loket.text-navy.text-bold
+								.antrian-loket.text-navy.text-bold(style='margin-top: 2px;')
+					.col-lg-6(style='height: 100%')
+						.row(style='height: 100%;')
+							- for (let i=1; i <= 4; i++)
+								.col-lg-6(style='height: 50%; padding-bottom: 20px;')
+									.box.box-solid.box-warning(style='height: 100%')
+										.box-header.text-center
+											.box-title
+												h3.text-bold= 'LOKET '+ i
+										.cabang.box-body.text-center.text-navy.text-bold(class='cabang'+i)
+		.kaki(class='bg-green', style='height: 10%;')
+			marquee
+				| Selamat Datang di Dinas Dukcapil Tebing Tinggi Kota
+		script(src='/assets/js/jquery.min.js')
+		script(src='/assets/js/bootstrap.min.js')
+		script(src='/socket.io/socket.io.js')
+		script.
+			$(function(){
+				var socket = io();
+				var nama_loket = $('.nama-loket');
+				var antrian_loket = $('.antrian-loket');
+				socket.on('reload loket', (data) => {
+				});
+				socket.on('panggil', (data) => {
+					nama_loket.html('LOKET '+data.loket);
+					antrian_loket.html('No. '+data.antrian);
+					var cabang = $('.cabang'+data.loket).html(data.antrian);
+
+				});
+				socket.on('reload screen', () => {
+					window.location.reload();
+				});
+				var bulan = [
+					'Januari',
+					'Februari',
+					'Maret',
+					'April',
+					'Mei',
+					'Juni',
+					'Juli',
+					'Agustus',
+					'September',
+					'Oktober',
+					'November',
+					'Desember'
+				];
+				var hari = [
+					'Ahad',
+					'Senin',
+					'Selasa',
+					'Rabu',
+					'Kamis',
+					'Jumat',
+					'Sabtu',
+				];
+				setInterval(function(){
+					var jam = $('.jam');
+					var nama = $('.hari');
+					var d = new Date();
+					jam.text(function(){
+						return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2);
+					});
+					nama.text(function(){
+						return d.getDate()+' '+bulan[d.getMonth()]+' '+d.getFullYear();
+					});
+				}, 500);
+			});

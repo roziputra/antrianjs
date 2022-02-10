@@ -1,0 +1,63 @@
+extends ../templates/layout
+
+block pages-header
+	h1 Jadwal Rapat
+		small
+block pages
+	.row
+		.col-md-12.col-sm-12
+			.box.box-solid.box-primary
+				.box-header
+					h3.box-title Tambah Jadwal Rapat
+				// box-header
+				.box-body
+					if message !== ''
+						.alert(class='alert-danger alert-dismissible')
+							button.close(type='button', data-dismiss='alert', aria-hidden='true') &times;
+							p
+								i.icon.fa.fa-ban
+								= message
+					form.form-horizontal(action='/jadwal/tambah', method='POST')
+						.form-group
+							label.col-sm-3.control-label(for='input_acara') Judul
+							.col-sm-9
+								input#input_acara.form-control(type='text', name='acara', value='', placeholder='Judul' required autofocus)
+						.form-group
+							label.col-sm-3.control-label(for='input_tanggal') Tanggal
+							.col-sm-4
+								input#input_tanggal.form-control(type='date', name='tanggal', value='', required)
+							.col-sm-5
+								.input-group
+									span.input-group-addon Pukul
+									input.form-control(type='number', min=7, max=23, name='jam', required)
+									span.input-group-addon :
+									input.form-control(type='number', step=10, min=0, max=60, name='menit')
+									span.input-group-addon WIB
+						.form-group
+							label.col-sm-3.control-label(for='input_durasi') Durasi
+							.col-sm-9
+								select#input_durasi.form-control(name='durasi')
+									- for (var i=1;i<=10;i++) {
+										option(value=i) #{i} Jam
+									- }
+						.form-group
+							label.col-sm-3.control-label(for='input_ruangan') Pilih Ruangan
+							.col-sm-9
+								select#input_ruangan.form-control(name='ruangan', required)
+									option(value='') Pilih Ruangan
+									each val, idk in ruangan
+										option(value=val.rowid) #{val.nama}
+						.form-group
+							label.col-sm-3.control-label(for='input_keterangan') Keterangan
+							.col-sm-9
+								input#input_keterangan.form-control(type='text', name='keterangan', placeholder='Keterangan' required)
+						.form-group
+							.col-sm-offset-3.col-sm-9
+								.btn-toolbar
+									button.btn.btn-md.btn-success(type='submit')
+										i.fa.fa-fw.fa-save
+										= ' Simpan'
+									a.btn.btn-danger(href='/ruangan')
+										i.fa.fa-fw.fa-undo
+										= ' Batal'
+				// /.box-body

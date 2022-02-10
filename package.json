@@ -1,0 +1,43 @@
+{
+  "name": "antrian",
+  "version": "1.0.0",
+  "author": "Rozi Putra",
+  "description": "Aplikasi Antrian",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start-electron": "electron main.js",
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www",
+    "build-win": "electron-builder --win --x64 --dir",
+    "build-linux": "electron-builder --linux --x64 --dir",
+    "pack-win": "electron-packager . startServer --asar --platform=win32 --arch=x64 --overwrite",
+    "pack-linux": "electron-packager . startServer --asar --platform=linux --arch=x64 --overwrite"
+  },
+  "build": {
+    "asar": true,
+    "asarUnpack": "./db/antrianjs.db",
+    "win": {
+      "icon": "build/icon.png"
+    }
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "express-session": "^1.17.0",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "node-machine-id": "^1.1.12",
+    "pug": "^2.0.4",
+    "socket.io": "^2.3.0",
+    "sqlite3": "^5.0.0"
+  },
+  "devDependencies": {
+    "electron": "^11.1.1",
+    "electron-builder": "^22.9.1",
+    "electron-packager": "^15.2.0",
+    "nodemon": "^2.0.7"
+  }
+}

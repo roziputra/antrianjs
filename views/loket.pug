@@ -1,0 +1,51 @@
+extends templates/layout
+
+block pages
+	div.content-wrapper
+		section.content-header
+			h1 Loket
+				small
+		section.content
+			.row
+				.col-md-12.col-sm-12
+					.box.box-solid.box-primary
+						.box-header
+							h3.box-title Daftar Loket
+						// box-header
+						.box-body
+							if message !== ''
+								.alert(class='alert-success alert-dismissible')
+									button.close(type='button', data-dismiss='alert', aria-hidden='true') &times;
+									p
+										i.icon.fa.fa-check
+										= message
+							table.table.table-bordered.table-striped
+								thead
+									tr
+										th LOKET
+										th NAMA
+										th NO ANTRIAN
+										th OPERATOR
+										th Aksi
+								tbody
+									each val, idk in row
+										tr
+											td #{val.kode}
+											td #{val.nama}
+											td #{val.antrian}
+											td #{val.user}
+											td
+												.btn-toolbar
+													//a.text-warning(href='#')
+														//i.fa.fa-fw.fa-edit
+													a.text-danger(href='/loket/hapus/'+val.kode)
+														i.fa.fa-fw.fa-trash
+													a.text-warning(href='/loket/edit/'+val.kode)
+														i.fa.fa-fw.fa-edit
+						.box-footer
+							a.btn.btn-primary(href='/loket/tambah')
+								i.fa.fa-fw.fa-plus
+								| Tambah Loket
+							a.btn.btn-danger.btn-konfirm.pull-right(href='/antrian/reset')
+								i.fa.fa-fw.fa-refresh
+								| Reset Antrian

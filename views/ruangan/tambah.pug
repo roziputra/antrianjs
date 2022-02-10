@@ -1,0 +1,32 @@
+extends ../templates/layout
+
+block pages-header
+	h1 Ruangan
+		small
+block pages
+	.row
+		.col-md-12.col-sm-12
+			.box.box-solid.box-primary
+				.box-header
+					h3.box-title Tambah Ruangan
+				// box-header
+				.box-body
+					form.form-horizontal(action='/ruangan/tambah', method='POST')
+						.form-group
+							label.col-sm-3.control-label(for='input_nama') Nama Ruangan
+							.col-sm-9
+								input#input_nama.form-control(type='text', name='nama', value='', placeholder='Nama Ruangan' autofocus required)
+						.form-group
+							label.col-sm-3.control-label(for='input_keterangan') Keterangan
+							.col-sm-9
+								input#input_keterangan.form-control(type='text', name='keterangan', value='', placeholder='keterangan', required)
+						.form-group
+							.col-sm-offset-3.col-sm-9
+								.btn-toolbar
+									button.btn.btn-md.btn-success(type='submit')
+										i.fa.fa-fw.fa-save
+										= ' Simpan'
+									a.btn.btn-danger(href='/ruangan')
+										i.fa.fa-fw.fa-undo
+										= ' Batal'
+				// /.box-body

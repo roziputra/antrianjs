@@ -1,0 +1,44 @@
+extends ../templates/layout
+
+block pages-header
+	h1 Jadwal Rapat
+		small
+block pages
+	.row
+		.col-md-12.col-sm-12
+			.box.box-solid.box-primary
+				.box-header
+					h3.box-title Daftar
+				// box-header
+				.box-body
+					table.table.table-bordered.table-striped
+						thead
+							tr
+								th #
+								th Tanggal
+								th Hari
+								th Jam
+								th Kegiatan
+								th Tempat
+								th Aksi
+						tbody
+							each val, idk in row
+								tr
+									td #{idx}
+									td #{val.tanggal}
+									td #{val.hari}
+									td #{val.jam}
+									td #{val.kegiatan}
+									td #{val.tempat}
+									td
+										.btn-toolbar
+											//a.text-warning(href='#')
+												//i.fa.fa-fw.fa-edit
+											a.text-danger(href='/jadwal/hapus/'+val.id)
+												i.fa.fa-fw.fa-trash
+											a.text-warning(href='/jadwal/edit/'+val.id)
+												i.fa.fa-fw.fa-edit
+				.box-footer
+					a.btn.btn-primary(href='/jadwal/tambah')
+						i.fa.fa-fw.fa-plus
+						| Tambah Rapat

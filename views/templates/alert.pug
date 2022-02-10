@@ -1,0 +1,19 @@
+if well
+	.alert.alert-info.alert-dismissible
+		button.close(type='button', data-dismiss='alert', aria-hidden='true') &times;
+		i.icon.fa.fa-fw.fa-info
+		= ' Hai '+ user.nama +','
+		p
+			= well
+if error
+	.alert.alert-danger.alert-dismissible
+		button.close(type='button', data-dismiss='alert', aria-hidden='true') &times;
+		i.icon.fa.fa-fw.fa-ban
+		p
+			= success
+if success
+	.alert.alert-success.alert-dismissible
+		button.close(type='button', data-dismiss='alert', aria-hidden='true') &times;
+		i.icon.fa.fa-fw.fa-check
+		p
+			= success

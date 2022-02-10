@@ -1,0 +1,12 @@
+extends templates/layout
+block header-script
+block  menu-atas
+block menu-samping
+block pages
+	div.content-wrapper
+		section.content-header
+			h1= error.status
+				small= message
+		section.content
+			pre #{error.stack}
+block footer

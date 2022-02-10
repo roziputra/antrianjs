@@ -1,0 +1,48 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', name='viewport')
+		title #{'Login Aplikasi Antrian '+ config.nama}
+		link(rel='shortcut icon', href='/assets/origin/favicon.png')
+		link(rel='stylesheet', href='/assets/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/assets/css/font-awesome.min.css')
+		link(rel='stylesheet', href='/assets/css/AdminLTE.min.css')
+		link(rel='stylesheet', href='/assets/css/login.css')
+	body.full-bg.mid-screen
+		form.form-signin.box.box-primary(action='/login', method='POST')
+			img.center-block(src='/assets/origin/logo.png', alt='Logo', title='Dukcapil', style='width: 100px;')
+			h1
+			h3.text-center Login Admin
+			.clearFix &nbsp;
+			if message !== ''
+				.alert(class='alert-danger alert-dismissible')
+					button.close(type='button', data-dismiss='alert', aria-hidden='true') &times;
+					p
+						i.icon.fa.fa-ban
+						= message
+			.form-group.input-group
+				.input-group-addon
+					span.input-group-text
+						i.fa.fa-fw.fa-user
+				input.form-control(type='text', name='username', placeholder='Username', aria-label='Username', autocomplete='off', autofocus)
+			.form-group.input-group
+				.input-group-addon
+					span.input-group-text
+						i.fa.fa-fw.fa-key
+				input.form-control(type='password', name='password', placeholder='Password', aria-label='Password')
+			input(type='hidden', name='reflogin' value=reflogin)
+			button.btn.btn-success.btn-flat.btn-block(type='submit')
+				i.fa.fa-fw.fa-lock
+				strong Login
+			p
+			p
+			.btn-toolbar
+				a.btn.btn-primary.pull-left(href='cetak')
+					i.fa.fa-fw.fa-print
+				a.btn.btn-danger.pull-right(href='screen')
+					i.fa.fa-fw.fa-tv
+		script(src='/assets/js/jquery.min.js')
+		script(src='/assets/js/bootstrap.min.js')
+		//script(src='/assets/js/login.js')
